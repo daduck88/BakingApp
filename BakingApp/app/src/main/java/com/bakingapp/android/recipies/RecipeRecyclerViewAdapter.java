@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecyclerViewAdapter.ViewHolder> {
 
-  private final List<Recipe> mValues;
+  private  List<Recipe> mValues;
   private final OnListFragmentInteractionListener mListener;
 
   public RecipeRecyclerViewAdapter(List<Recipe> items, OnListFragmentInteractionListener listener) {
@@ -37,7 +37,7 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mValues.get(position);
-    holder.mIdView.setText(mValues.get(position).getId());
+    holder.mIdView.setText(mValues.get(position).getId() + "");
     holder.mContentView.setText(mValues.get(position).getName());
 
     holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +57,12 @@ public class RecipeRecyclerViewAdapter extends RecyclerView.Adapter<RecipeRecycl
     return mValues.size();
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder {
+  public void updateData(List<Recipe> recipes) {
+    mValues = recipes;
+    notifyDataSetChanged();
+  }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView mIdView;
     public final TextView mContentView;

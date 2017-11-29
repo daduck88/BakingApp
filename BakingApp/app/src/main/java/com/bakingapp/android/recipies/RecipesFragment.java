@@ -10,10 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bakingapp.android.App;
 import com.bakingapp.android.R;
 import com.bakingapp.android.data.Recipe;
+import com.bakingapp.android.model.service.repository.RecipesDataRepository;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.inject.Inject;
 
 /**
  * A fragment representing a list of Items.
@@ -28,6 +34,11 @@ public class RecipesFragment extends Fragment {
   // TODO: Customize parameters
   private int mColumnCount = 2;
   private OnListFragmentInteractionListener mListener;
+
+
+  @Inject
+  RecipesDataRepository recipesDataRepository;
+  private RecipeRecyclerViewAdapter adapter;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,6 +59,7 @@ public class RecipesFragment extends Fragment {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    App.getAppComponent(getActivity()).inject(this);
     super.onCreate(savedInstanceState);
 
     if(getArguments() != null) {
@@ -69,11 +81,32 @@ public class RecipesFragment extends Fragment {
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
       }
-      recyclerView.setAdapter(new RecipeRecyclerViewAdapter(new ArrayList<Recipe>(), mListener));
+      adapter = new RecipeRecyclerViewAdapter(new ArrayList<Recipe>(), mListener);
+      recyclerView.setAdapter(adapter);
     }
+    initData();
     return view;
   }
 
+  private void initData() {
+    recipesDataRepository.getRecipes().subscribe(this::displayStockResults, this::displayErrors);
+  }
+
+
+  private void displayErrors(Throwable throwable) {
+//    String message = throwable.getMessage();
+//    if (throwable instanceof NoSuchElementException) {
+//      message = "Enter a stock symbol first!!";
+//    }
+//    binding.errorMessage.setVisibility(View.VISIBLE);
+//    binding.errorMessage.setText(message);
+    //TODO show error message
+    throwable.printStackTrace();
+  }
+
+  private void displayStockResults(List<Recipe> recipes) {
+    adapter.updateData(recipes);
+  }
 
   @Override
   public void onAttach(Context context) {
