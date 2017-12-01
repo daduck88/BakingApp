@@ -1,4 +1,4 @@
-package com.bakingapp.android.recipies;
+package com.bakingapp.android.recipes;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,14 +17,13 @@ import com.bakingapp.android.model.service.repository.RecipesDataRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link RecipesAdapter.RecipeClickListener}
  * interface.
  */
 public class RecipesFragment extends Fragment {
@@ -33,12 +32,12 @@ public class RecipesFragment extends Fragment {
   private static final String ARG_COLUMN_COUNT = "column-count";
   // TODO: Customize parameters
   private int mColumnCount = 2;
-  private OnListFragmentInteractionListener mListener;
+  private RecipesAdapter.RecipeClickListener mListener;
 
 
   @Inject
   RecipesDataRepository recipesDataRepository;
-  private RecipeRecyclerViewAdapter adapter;
+  private RecipesAdapter adapter;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -81,7 +80,7 @@ public class RecipesFragment extends Fragment {
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
       }
-      adapter = new RecipeRecyclerViewAdapter(new ArrayList<Recipe>(), mListener);
+      adapter = new RecipesAdapter(new ArrayList<Recipe>(), mListener);
       recyclerView.setAdapter(adapter);
     }
     initData();
@@ -111,8 +110,8 @@ public class RecipesFragment extends Fragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if(context instanceof OnListFragmentInteractionListener) {
-      mListener = (OnListFragmentInteractionListener) context;
+    if(context instanceof RecipesAdapter.RecipeClickListener) {
+      mListener = (RecipesAdapter.RecipeClickListener) context;
     } else {
       throw new RuntimeException(context.toString()
           + " must implement OnListStepClickListener");
@@ -125,18 +124,4 @@ public class RecipesFragment extends Fragment {
     mListener = null;
   }
 
-  /**
-   * This interface must be implemented by activities that contain this
-   * fragment to allow an interaction in this fragment to be communicated
-   * to the activity and potentially other fragments contained in that
-   * activity.
-   * <p/>
-   * See the Android Training lesson <a href=
-   * "http://developer.android.com/training/basics/fragments/communicating.html"
-   * >Communicating with Other Fragments</a> for more information.
-   */
-  public interface OnListFragmentInteractionListener {
-    // TODO: Update argument type and name
-    void onListFragmentInteraction(Recipe recipe);
-  }
 }

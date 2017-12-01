@@ -1,20 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/lib-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
-  <TextView
-    android:id="@+id/id"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/text_margin"
-    android:textAppearance="?attr/textAppearanceListItem" />
+    <data>
 
-  <TextView
-    android:id="@+id/content"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/text_margin"
-    android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        <variable
+            name="recipe"
+            type="com.bakingapp.android.data.Recipe" />
+
+        <variable
+            name="listener"
+            type="com.bakingapp.android.recipes.RecipesAdapter.RecipeClickListener" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:onClick="@{(theView) -> listener.onRecipeClick(recipe, theView)}"
+        card_view:cardCornerRadius="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{recipe.image}" />
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_margin"
+                android:text="@{recipe.name}"
+                android:layout_alignParentBottom="true"
+                android:textAppearance="?attr/textAppearanceListItem"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</layout>

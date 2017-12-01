@@ -1,18 +1,17 @@
 package com.bakingapp.android;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.bakingapp.android.base.BaseActivity;
 import com.bakingapp.android.data.Recipe;
 import com.bakingapp.android.detailrecipe.DetailActivity;
-import com.bakingapp.android.recipies.RecipesFragment;
+import com.bakingapp.android.recipes.RecipesAdapter;
+import com.bakingapp.android.recipes.RecipesFragment;
 
-public class MainActivity extends BaseActivity implements RecipesFragment.OnListFragmentInteractionListener {
+public class MainActivity extends BaseActivity implements RecipesAdapter.RecipeClickListener {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +27,9 @@ public class MainActivity extends BaseActivity implements RecipesFragment.OnList
     ft.commitAllowingStateLoss();
   }
 
+
   @Override
-  public void onListFragmentInteraction(Recipe recipe) {
+  public void onRecipeClick(Recipe recipe, View view) {
     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
     intent.putExtra(DetailActivity.RECIPE, recipe);
     startActivity(intent);

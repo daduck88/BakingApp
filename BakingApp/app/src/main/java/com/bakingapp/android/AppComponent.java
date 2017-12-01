@@ -1,6 +1,6 @@
 package com.bakingapp.android;
 
-import com.bakingapp.android.recipies.RecipesFragment;
+import com.bakingapp.android.recipes.RecipesFragment;
 
 import javax.inject.Singleton;
 
