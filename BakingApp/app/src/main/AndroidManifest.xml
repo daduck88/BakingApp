@@ -23,6 +23,9 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity android:name=".detailrecipe.DetailActivity"
+        android:screenOrientation="behind"
+        android:theme="@style/NotToolbarTheme"/>
   </application>
 
 </manifest>

@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <TextView
-    android:id="@+id/id"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/text_margin"
-    android:textAppearance="?attr/textAppearanceListItem" />
+    <data>
 
-  <TextView
-    android:id="@+id/content"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/text_margin"
-    android:textAppearance="?attr/textAppearanceListItem" />
-</LinearLayout>
+        <variable
+            name="step"
+            type="com.bakingapp.android.data.Step" />
+
+        <variable
+            name="listener"
+            type="com.bakingapp.android.detailrecipe.steps.StepsAdapter.StepClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_step_selector"
+        android:foreground="@drawable/accent_ripple"
+        android:onClick="@{(theView) -> listener.onStepClick(step.position, theView)}">
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="@{step.shortDescription}"
+            android:textAppearance="?attr/textAppearanceListItem" />
+    </LinearLayout>
+</layout>

@@ -1,6 +1,7 @@
 package com.bakingapp.android.detailrecipe.step;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.bakingapp.android.R;
 import com.bakingapp.android.data.Step;
+import com.bakingapp.android.databinding.FragmentStepBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,15 +64,13 @@ public class StepFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_step, container, false);
-  }
-
-  // TODO: Rename method, update argument and hook method into UI event
-  public void onButtonPressed(Uri uri) {
-    if(mListener != null) {
-      mListener.onNextStepClick();
-    }
+    FragmentStepBinding binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_step, container, false);
+    View view = binding.getRoot();
+    //here data must be an instance of the class MarsDataProvider
+    binding.setStep(mStep);
+    binding.setListener(mListener);
+    return view;
   }
 
   @Override

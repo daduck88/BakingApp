@@ -3,6 +3,7 @@ package com.bakingapp.android.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -24,6 +25,9 @@ public class Step implements Parcelable{
     @SerializedName("thumbnailURL")
     @Expose
     private String thumbnailURL;
+    private int position;
+    private boolean notFirst;
+    private boolean notLast;
 
     public Integer getId() {
         return id;
@@ -63,6 +67,44 @@ public class Step implements Parcelable{
 
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean isNotFirst() {
+        return notFirst;
+    }
+
+    public void setNotFirst(boolean notFirst) {
+        this.notFirst = notFirst;
+    }
+
+    public boolean isNotLast() {
+        return notLast;
+    }
+
+    public void setNotLast(boolean notLast) {
+        this.notLast = notLast;
+    }
+
+    public int videoVisibility(){
+        if(videoURL == null || videoURL.isEmpty()){
+            return View.GONE;
+        }
+        return View.VISIBLE;
+    }
+
+    public int imageVisibility(){
+        if(thumbnailURL == null || thumbnailURL.isEmpty() || thumbnailURL.endsWith(".mp4")){
+            return View.GONE;
+        }
+        return View.VISIBLE;
     }
 
     @Override

@@ -20,6 +20,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:foreground="@drawable/accent_ripple"
         android:onClick="@{(theView) -> listener.onRecipeClick(recipe, theView)}"
         card_view:cardCornerRadius="4dp">
 

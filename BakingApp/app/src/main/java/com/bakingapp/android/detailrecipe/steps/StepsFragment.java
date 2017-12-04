@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bakingapp.android.App;
 import com.bakingapp.android.R;
 import com.bakingapp.android.data.Step;
 
@@ -18,15 +19,16 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListStepClickListener}
+ * Activities containing this fragment MUST implement the {@link StepClickListener}
  * interface.
  */
 public class StepsFragment extends Fragment {
 
   private static final String STEPS = "STEPS";
   private List<Step> mSteps = new ArrayList<>();
-  private OnListStepClickListener mListener;
-  private StepsRecyclerViewAdapter mAdapter;
+  private StepsAdapter.StepClickListener mListener;
+  private StepsAdapter mAdapter;
+  private int mSelectedStep;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,8 +66,9 @@ public class StepsFragment extends Fragment {
       Context context = view.getContext();
       RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-      mAdapter = new StepsRecyclerViewAdapter(mSteps, mListener);
+      mAdapter = new StepsAdapter(mSteps, mListener);
       recyclerView.setAdapter(mAdapter);
+      setSelectedStep(mSelectedStep);
     }
     return view;
   }
@@ -74,8 +77,8 @@ public class StepsFragment extends Fragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    if(context instanceof OnListStepClickListener) {
-      mListener = (OnListStepClickListener) context;
+    if(context instanceof StepsAdapter.StepClickListener) {
+      mListener = (StepsAdapter.StepClickListener) context;
     } else {
       throw new RuntimeException(context.toString()
           + " must implement OnListStepClickListener");
@@ -89,21 +92,11 @@ public class StepsFragment extends Fragment {
   }
 
   public void setSelectedStep(int selectedPosition) {
-    mAdapter.setSelectedStep(mSteps.get(selectedPosition));
-  }
-
-  /**
-   * This interface must be implemented by activities that contain this
-   * fragment to allow an interaction in this fragment to be communicated
-   * to the activity and potentially other fragments contained in that
-   * activity.
-   * <p/>
-   * See the Android Training lesson <a href=
-   * "http://developer.android.com/training/basics/fragments/communicating.html"
-   * >Communicating with Other Fragments</a> for more information.
-   */
-  public interface OnListStepClickListener {
-    // TODO: Update argument type and name
-    void onListFragmentInteraction(int selectedStepPosition);
+    if(App.isTablet()) {
+      mSelectedStep = selectedPosition;
+      if (!mSteps.isEmpty()) {
+        mAdapter.setSelectedStep(mSteps.get(mSelectedStep));
+      }
+    }
   }
 }

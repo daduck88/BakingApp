@@ -3,6 +3,7 @@ package com.bakingapp.android.utils;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
+import android.opengl.Visibility;
 import android.view.View;
 import android.widget.ImageView;
 

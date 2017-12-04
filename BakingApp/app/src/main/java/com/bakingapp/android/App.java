@@ -13,11 +13,17 @@ public class App extends Application {
 
     @Getter
     private AppComponent appComponent;
+    private static boolean tablet;
+
+    public static boolean isTablet() {
+        return tablet;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         initAppComponent();
+        tablet = getResources().getBoolean(R.bool.isTablet);
     }
 
     private void initAppComponent() {
