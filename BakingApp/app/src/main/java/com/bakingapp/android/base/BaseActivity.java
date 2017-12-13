@@ -10,13 +10,16 @@ import com.bakingapp.android.R;
 
 public class BaseActivity extends AppCompatActivity {
   protected Toolbar mToolbar;
+  protected boolean overrideOrientation = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    if(App.isTablet()) {
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    } else {
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    if(overrideOrientation) {
+      if(App.isTablet()) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+      } else {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      }
     }
     super.onCreate(savedInstanceState);
   }

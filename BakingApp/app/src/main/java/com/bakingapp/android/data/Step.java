@@ -93,6 +93,10 @@ public class Step implements Parcelable{
         this.notLast = notLast;
     }
 
+    public boolean showVideo(){
+        return (videoURL != null && !videoURL.isEmpty());
+    }
+
     public int videoVisibility(){
         if(videoURL == null || videoURL.isEmpty()){
             return View.GONE;

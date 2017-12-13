@@ -26,6 +26,8 @@
     <activity android:name=".detailrecipe.DetailActivity"
         android:screenOrientation="behind"
         android:theme="@style/NotToolbarTheme"/>
+    <activity android:name=".detailrecipe.step.StepActivity"
+              android:theme="@style/NotToolbarTheme"/>
   </application>
 
 </manifest>

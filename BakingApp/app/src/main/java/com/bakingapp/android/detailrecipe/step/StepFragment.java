@@ -12,6 +12,18 @@ import android.view.ViewGroup;
 import com.bakingapp.android.R;
 import com.bakingapp.android.data.Step;
 import com.bakingapp.android.databinding.FragmentStepBinding;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,15 +37,14 @@ public class StepFragment extends Fragment {
   // TODO: Rename parameter arguments, choose names that match
   // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
   private static final String STEP = "STEP";
-  private static final String IS_FIRST_STEP = "IS_FIRST_STEP";
-  private static final String IS_LAST_STEP = "IS_LAST_STEP";
 
   // TODO: Rename and change types of parameters
   private Step mStep;
-  private boolean isFirstStep;
-  private boolean isLastStep;
 
   private OnPreviousNextStepListener mListener;
+
+  private SimpleExoPlayer mExoPlayer;
+  private SimpleExoPlayerView mPlayerView;
 
   /**
    * Use this factory method to create a new instance of
@@ -46,9 +57,9 @@ public class StepFragment extends Fragment {
   public static StepFragment newInstance(Step step, boolean isFirstStep,boolean isLastStep) {
     StepFragment fragment = new StepFragment();
     Bundle args = new Bundle();
+    step.setNotFirst(!isFirstStep);
+    step.setNotLast(!isLastStep);
     args.putParcelable(STEP, step);
-    args.putBoolean(IS_FIRST_STEP, isFirstStep);
-    args.putBoolean(IS_LAST_STEP, isLastStep);
     fragment.setArguments(args);
     return fragment;
   }
@@ -70,18 +81,45 @@ public class StepFragment extends Fragment {
     //here data must be an instance of the class MarsDataProvider
     binding.setStep(mStep);
     binding.setListener(mListener);
+    mPlayerView = binding.playerView;
+    initPlayer();
     return view;
   }
 
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-    if(context instanceof OnPreviousNextStepListener) {
-      mListener = (OnPreviousNextStepListener) context;
-    } else {
-      throw new RuntimeException(context.toString()
-          + " must implement OnPreviousNextStepListener");
+  private void initPlayer() {
+    if(mStep.showVideo()){
+      if (mExoPlayer == null) {
+        // Create an instance of the ExoPlayer.
+        TrackSelector trackSelector = new DefaultTrackSelector();
+        LoadControl loadControl = new DefaultLoadControl();
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+        mPlayerView.setPlayer(mExoPlayer);
+        // Prepare the MediaSource.
+        String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
+        MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(mStep.getVideoURL()), new DefaultDataSourceFactory(
+            getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+        mExoPlayer.prepare(mediaSource);
+        mExoPlayer.setPlayWhenReady(true);
+      }
     }
+  }
+
+  private void releasePlayer() {
+    if(mExoPlayer != null) {
+      mExoPlayer.stop();
+      mExoPlayer.release();
+      mExoPlayer = null;
+    }
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    releasePlayer();
+  }
+
+  public void setListener(OnPreviousNextStepListener mListener) {
+    this.mListener = mListener;
   }
 
   @Override
