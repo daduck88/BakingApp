@@ -1,0 +1,16 @@
+{
+	"syntaxVersion": "4",
+	"packageName": "com.bakingapp.android",
+	"providerJavaPackage": "com.bakingapp.android.provider",
+	"authority": "com.bakingapp.android.provider",
+	"providerClassName": "BakingProvider",
+	"databaseFileName": "bakingdb.db",
+	"databaseVersion": 1,
+	"sqliteOpenHelperClassName": "BakingSQLiteOpenHelper",
+	"sqliteOpenHelperCallbacksClassName": "BakingSQLiteOpenHelperCallbacks",
+	"enableForeignKeys": true,
+	"useAnnotations": true,
+	"useSupportLibrary": true,
+	"generateBeans": true,
+	"debugLogsFieldName": "LOG_DEBUG_PROVIDER"
+}

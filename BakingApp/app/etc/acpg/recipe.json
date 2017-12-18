@@ -1,0 +1,31 @@
+{
+  "documentation": "just a Recipe",
+  "fields": [
+    {
+      "name": "id_recipe",
+      "type": "Integer",
+      "index": true
+    },
+    {
+      "documentation": "name",
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "servings",
+      "type": "Integer"
+    },
+    {
+      "documentation": "image",
+      "name": "image",
+      "type": "String"
+    }
+  ],
+
+  "constraints": [
+    {
+      "name": "unique_recipe",
+      "definition": "UNIQUE (id_recipe) ON CONFLICT REPLACE"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "documentation": "ingredient for the Recipe",
+  "fields": [
+    {
+      "name": "quantity",
+      "type": "Integer"
+    },
+    {
+      "documentation": "measure",
+      "name": "measure",
+      "type": "String"
+    },
+    {
+      "documentation": "ingredient",
+      "name": "ingredient",
+      "type": "String"
+    },
+    {
+      "name": "id_recipe",
+      "type": "Integer",
+      "nullable": false,
+      "index": true
+    }
+  ],
+
+  "constraints": [
+    {
+      "name": "unique_recipe",
+      "definition": "UNIQUE (id_recipe, ingredient) ON CONFLICT REPLACE"
+    }
+  ]
+}

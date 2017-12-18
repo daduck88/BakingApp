@@ -9,6 +9,8 @@ android {
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    buildConfigField 'boolean', 'LOG_DEBUG_PROVIDER', "true"
   }
   dataBinding {
     enabled = true
@@ -24,7 +26,21 @@ android {
     sourceCompatibility 1.8
   }
 }
-
+//content provider library
+apply plugin: 'org.jraf.acpg.gradleplugin'
+acpg {
+  entitiesDir file('etc/acpg')
+  providerJavaPackage 'com.bakingapp.android.provider'
+  authority '${applicationId}.provider'
+  providerClassName 'BakingProvider'
+  databaseFileName 'baking.db'
+  databaseVersion 1
+  sqliteOpenHelperCallbacksClassName 'BakingSQLiteOpenHelperCallbacks'
+  enableForeignKeys true
+  useAnnotations true
+  useSupportLibrary true
+  debugLogsFieldName 'LOG_DEBUG_PROVIDER'
+}
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   //support libraries
