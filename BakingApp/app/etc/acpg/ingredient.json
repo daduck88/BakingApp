@@ -3,7 +3,7 @@
   "fields": [
     {
       "name": "quantity",
-      "type": "Integer"
+      "type": "Float"
     },
     {
       "documentation": "measure",

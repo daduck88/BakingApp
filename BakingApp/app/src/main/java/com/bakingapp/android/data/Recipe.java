@@ -1,10 +1,15 @@
 
 package com.bakingapp.android.data;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.List;
+
+import com.bakingapp.android.App;
+import com.bakingapp.android.provider.recipe.RecipeContentValues;
+import com.bakingapp.android.provider.recipe.RecipeCursor;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,6 +33,13 @@ public class Recipe implements Parcelable{
     @SerializedName("image")
     @Expose
     private String image;
+
+    public Recipe (RecipeCursor cursor){
+        id = cursor.getIdRecipe();
+        name = cursor.getName();
+        servings = cursor.getServings();
+        image = cursor.getImage();
+    }
 
     public Integer getId() {
         return id;
@@ -115,4 +127,13 @@ public class Recipe implements Parcelable{
             return new Recipe[size];
         }
     };
+
+    public Uri insertUri() {
+        RecipeContentValues values = new RecipeContentValues();
+        values.putIdRecipe(id);
+        values.putName(name);
+        values.putServings(servings);
+        values.putImage(image);
+        return values.insert(App.getContext());
+    }
 }

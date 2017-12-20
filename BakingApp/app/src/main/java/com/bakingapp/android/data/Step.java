@@ -1,10 +1,15 @@
 
 package com.bakingapp.android.data;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
 
+import com.bakingapp.android.App;
+import com.bakingapp.android.provider.recipe.RecipeContentValues;
+import com.bakingapp.android.provider.step.StepContentValues;
+import com.bakingapp.android.provider.step.StepCursor;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,6 +33,14 @@ public class Step implements Parcelable{
     private int position;
     private boolean notFirst;
     private boolean notLast;
+
+    public Step(StepCursor stepCursor) {
+        id = stepCursor.getIdStep();
+        shortDescription = stepCursor.getDescription();
+        description = stepCursor.getDescription();
+        videoURL = stepCursor.getVideourl();
+        thumbnailURL = stepCursor.getThumbnailurl();
+    }
 
     public Integer getId() {
         return id;
@@ -147,4 +160,15 @@ public class Step implements Parcelable{
             return new Step[size];
         }
     };
+
+    public Uri insertUri(int idRecipe) {
+        StepContentValues values = new StepContentValues();
+        values.putIdStep(id);
+        values.putShortdescription(shortDescription);
+        values.putDescription(description);
+        values.putVideourl(videoURL);
+        values.putThumbnailurl(thumbnailURL);
+        values.putIdRecipe(idRecipe);
+        return values.insert(App.getContext());
+    }
 }

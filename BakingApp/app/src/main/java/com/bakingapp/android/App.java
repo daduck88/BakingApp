@@ -11,6 +11,7 @@ import lombok.Getter;
 
 public class App extends Application {
 
+    private static Context mContext;
     @Getter
     private AppComponent appComponent;
     private static boolean tablet;
@@ -22,6 +23,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         initAppComponent();
         tablet = getResources().getBoolean(R.bool.isTablet);
     }
@@ -38,4 +40,8 @@ public class App extends Application {
         App myApp = get(context.getApplicationContext());
         return myApp.getAppComponent();
     }
+
+  public static Context getContext() {
+        return mContext;
+  }
 }

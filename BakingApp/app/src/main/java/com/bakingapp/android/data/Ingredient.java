@@ -1,9 +1,14 @@
 
 package com.bakingapp.android.data;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bakingapp.android.App;
+import com.bakingapp.android.provider.ingredient.IngredientContentValues;
+import com.bakingapp.android.provider.ingredient.IngredientCursor;
+import com.bakingapp.android.provider.step.StepContentValues;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +23,12 @@ public class Ingredient implements Parcelable{
     @SerializedName("ingredient")
     @Expose
     private String ingredient;
+
+    public Ingredient(IngredientCursor cursor){
+        quantity = cursor.getQuantity();
+        measure = cursor.getMeasure();
+        ingredient = cursor.getIngredient();
+    }
 
     public Float getQuantity() {
         return quantity;
@@ -75,4 +86,13 @@ public class Ingredient implements Parcelable{
             return new Ingredient[size];
         }
     };
+
+    public Uri insertUri(Integer idRecipe) {
+        IngredientContentValues values = new IngredientContentValues();
+        values.putQuantity(quantity);
+        values.putMeasure(measure);
+        values.putIngredient(ingredient);
+        values.putIdRecipe(idRecipe);
+        return values.insert(App.getContext());
+    }
 }
