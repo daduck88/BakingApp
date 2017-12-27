@@ -46,26 +46,28 @@ public class RecipesDataRepository {
 
     public Observable<List<Recipe>> getRecipesAPI() {
         Observable<List<Recipe>> observableAPI = service
-            .getRecipes();
-        observableAPI.flatMap((Function<List<Recipe>, ObservableSource<?>>) recipes -> {
-            saveRecipesDB(recipes);
-            return Observable.just(recipes);
-        });
+            .getRecipes().delay(3, TimeUnit.SECONDS)
+            .flatMap(recipes -> {
+                saveRecipesDB(recipes);
+                Log.e("TEMP ", "save API to DB");
+                return Observable.just(recipes);
+            });
         return observableAPI;
     }
 
     private Observable<List<Recipe>> getRecipesDB() {
         Observable<List<Recipe>> observableDB = Observable.create(e -> {
+            Log.e("TEMP ", "get from DB");
             RecipeSelection recipeSelection = new RecipeSelection();
             RecipeCursor recipeCursor = recipeSelection.query(App.getContext());
             List<Recipe> recipes = new ArrayList<>();
-            while(recipeCursor.moveToNext()){
+            while(recipeCursor != null && recipeCursor.moveToNext()){
                 Recipe recipe = new Recipe(recipeCursor);
                 StepSelection stepSelection = new StepSelection();
                 stepSelection.idRecipe(recipe.getId());
                 StepCursor stepCursor = stepSelection.query(App.getContext());
                 recipe.setSteps(new ArrayList<>());
-                while(stepCursor.moveToNext()){
+                while(stepCursor != null && stepCursor.moveToNext()){
                     Step step = new Step(stepCursor);
                     recipe.getSteps().add(step);
                 }
@@ -74,7 +76,7 @@ public class RecipesDataRepository {
                 ingredientSelection.idRecipe(recipe.getId());
                 IngredientCursor ingredientCursor = ingredientSelection.query(App.getContext());
                 recipe.setIngredients(new ArrayList<>());
-                while(ingredientCursor.moveToNext()){
+                while(ingredientCursor != null && ingredientCursor.moveToNext()){
                     Ingredient ingredient = new Ingredient(ingredientCursor);
                     recipe.getIngredients().add(ingredient);
                 }

@@ -13,6 +13,11 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
+
+    <provider
+      android:name=".provider.BakingProvider"
+      android:authorities="com.bakingapp.android.provider"
+      android:exported="false" />
     <activity
       android:name=".MainActivity"
       android:screenOrientation="behind"
