@@ -1,0 +1,22 @@
+{
+  "documentation": "just a Recipe",
+  "fields": [
+    {
+      "name": "widget_id",
+      "type": "Integer",
+      "index": true
+    },
+    {
+      "documentation": "recipe id for this widget",
+      "name": "id_recipe",
+      "type": "Integer"
+    }
+  ],
+
+  "constraints": [
+    {
+      "name": "unique_recipe",
+      "definition": "UNIQUE (widget_id) ON CONFLICT REPLACE"
+    }
+  ]
+}

@@ -62,30 +62,34 @@ public class RecipesDataRepository {
             RecipeCursor recipeCursor = recipeSelection.query(App.getContext());
             List<Recipe> recipes = new ArrayList<>();
             while(recipeCursor != null && recipeCursor.moveToNext()){
-                Recipe recipe = new Recipe(recipeCursor);
-                StepSelection stepSelection = new StepSelection();
-                stepSelection.idRecipe(recipe.getId());
-                StepCursor stepCursor = stepSelection.query(App.getContext());
-                recipe.setSteps(new ArrayList<>());
-                while(stepCursor != null && stepCursor.moveToNext()){
-                    Step step = new Step(stepCursor);
-                    recipe.getSteps().add(step);
-                }
-
-                IngredientSelection ingredientSelection = new IngredientSelection();
-                ingredientSelection.idRecipe(recipe.getId());
-                IngredientCursor ingredientCursor = ingredientSelection.query(App.getContext());
-                recipe.setIngredients(new ArrayList<>());
-                while(ingredientCursor != null && ingredientCursor.moveToNext()){
-                    Ingredient ingredient = new Ingredient(ingredientCursor);
-                    recipe.getIngredients().add(ingredient);
-                }
-                recipes.add(recipe);
+                recipes.add(getRecipe(recipeCursor));
             }
             e.onNext(recipes);
             e.onComplete();
         });
         return observableDB;
+    }
+
+    public static Recipe getRecipe (RecipeCursor recipeCursor){
+        Recipe recipe = new Recipe(recipeCursor);
+        StepSelection stepSelection = new StepSelection();
+        stepSelection.idRecipe(recipe.getId());
+        StepCursor stepCursor = stepSelection.query(App.getContext());
+        recipe.setSteps(new ArrayList<>());
+        while(stepCursor != null && stepCursor.moveToNext()){
+            Step step = new Step(stepCursor);
+            recipe.getSteps().add(step);
+        }
+
+        IngredientSelection ingredientSelection = new IngredientSelection();
+        ingredientSelection.idRecipe(recipe.getId());
+        IngredientCursor ingredientCursor = ingredientSelection.query(App.getContext());
+        recipe.setIngredients(new ArrayList<>());
+        while(ingredientCursor != null && ingredientCursor.moveToNext()){
+            Ingredient ingredient = new Ingredient(ingredientCursor);
+            recipe.getIngredients().add(ingredient);
+        }
+        return recipe;
     }
 
     private void saveRecipesDB(List<Recipe> recipes){

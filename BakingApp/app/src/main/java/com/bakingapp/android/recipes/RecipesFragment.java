@@ -34,7 +34,6 @@ public class RecipesFragment extends Fragment {
   private int mColumnCount = 2;
   private RecipesAdapter.RecipeClickListener mListener;
 
-
   @Inject
   RecipesDataRepository recipesDataRepository;
   private RecipesAdapter adapter;
@@ -91,14 +90,13 @@ public class RecipesFragment extends Fragment {
     recipesDataRepository.getRecipes().subscribe(this::displayStockResults, this::displayErrors);
   }
 
-
   private void displayErrors(Throwable throwable) {
-//    String message = throwable.getMessage();
-//    if (throwable instanceof NoSuchElementException) {
-//      message = "Enter a stock symbol first!!";
-//    }
-//    binding.errorMessage.setVisibility(View.VISIBLE);
-//    binding.errorMessage.setText(message);
+    //    String message = throwable.getMessage();
+    //    if (throwable instanceof NoSuchElementException) {
+    //      message = "Enter a stock symbol first!!";
+    //    }
+    //    binding.errorMessage.setVisibility(View.VISIBLE);
+    //    binding.errorMessage.setText(message);
     //TODO show error message
     throwable.printStackTrace();
   }
@@ -123,5 +121,4 @@ public class RecipesFragment extends Fragment {
     super.onDetach();
     mListener = null;
   }
-
 }

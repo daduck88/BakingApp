@@ -17,7 +17,7 @@
     <provider
       android:name=".provider.BakingProvider"
       android:authorities="com.bakingapp.android.provider"
-      android:exported="false" />
+      android:exported="true" />
     <activity
       android:name=".MainActivity"
       android:screenOrientation="behind"
@@ -33,6 +33,25 @@
         android:theme="@style/NotToolbarTheme"/>
     <activity android:name=".detailrecipe.step.StepActivity"
               android:theme="@style/NotToolbarTheme"/>
+    <receiver android:name=".widget.RecipeWidgetProvider">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/plant_widget_info" />
+    </receiver>
+    <activity android:name=".widget.ConfigureActivity"
+              android:theme="@style/NotToolbarTheme">
+    <intent-filter>
+      <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+    </intent-filter>
+  </activity>
+
+    <service
+      android:name=".widget.ListWidgetService"
+      android:permission="android.permission.BIND_REMOTEVIEWS" />
   </application>
 
 </manifest>

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class DetailActivity extends BaseActivity implements StepsAdapter.StepClickListener{
 
     public static final String RECIPE = "RECIPE";
+    public static final String CURRENT_STEP = "CURRENT_STEP";
     private Recipe mRecipe;
     private StepsFragment mStepsFragment;
     private int mCurrentStepPosition;
