@@ -35,8 +35,8 @@ public class Step implements Parcelable{
     private boolean notLast;
 
     public Step(StepCursor stepCursor) {
-        id = stepCursor.getIdStep();
-        shortDescription = stepCursor.getDescription();
+        id = stepCursor.getPosition();
+        shortDescription = stepCursor.getShortdescription();
         description = stepCursor.getDescription();
         videoURL = stepCursor.getVideourl();
         thumbnailURL = stepCursor.getThumbnailurl();
@@ -163,7 +163,7 @@ public class Step implements Parcelable{
 
     public Uri insertUri(int idRecipe) {
         StepContentValues values = new StepContentValues();
-        values.putIdStep(id);
+        values.putPosition(id);
         values.putShortdescription(shortDescription);
         values.putDescription(description);
         values.putVideourl(videoURL);

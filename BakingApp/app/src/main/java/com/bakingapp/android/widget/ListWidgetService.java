@@ -51,9 +51,10 @@ public class ListWidgetService extends RemoteViewsService {
 
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-  private final int mAppWidgetId;
-  Context mContext;
-  List<Step> mStepList;
+  private int mAppWidgetId;
+  private Context mContext;
+  private Recipe mWidgetRecipe;
+  private List<Step> mStepList;
 
   public ListRemoteViewsFactory(Context applicationContext, int appWidgetId) {
     mContext = applicationContext;
@@ -76,8 +77,8 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
       recipeSelection.idRecipe(selectedRecipeCursor.getIdRecipe());
       RecipeCursor recipeCursor = recipeSelection.query(App.getContext());
       if((recipeCursor != null && recipeCursor.moveToNext())) {
-        Recipe widgetRecipe = RecipesDataRepository.getRecipe(recipeCursor);
-        mStepList = widgetRecipe.getSteps();
+        mWidgetRecipe = RecipesDataRepository.getRecipe(recipeCursor);
+        mStepList = mWidgetRecipe.getSteps();
       }
     }
   }
@@ -104,12 +105,13 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
   public RemoteViews getViewAt(int position) {
     Step step = mStepList.get(position);
 
-    RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.item_step);
+    RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.item_widget_step);
 
     views.setTextViewText(R.id.content, step.getShortDescription());
 
     // Fill in the onClick PendingIntent Template using the specific step position
     Bundle extras = new Bundle();
+    extras.putParcelable(DetailActivity.RECIPE, mWidgetRecipe);
     extras.putLong(DetailActivity.CURRENT_STEP, position);
     Intent fillInIntent = new Intent();
     fillInIntent.putExtras(extras);

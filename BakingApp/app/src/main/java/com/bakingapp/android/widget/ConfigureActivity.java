@@ -37,6 +37,8 @@ public class ConfigureActivity extends MainActivity {
         R.layout.recipe_widget);
     appWidgetManager.updateAppWidget(mAppWidgetId, views);
 
+    RecipeWidgetProvider.updateAppWidget(getApplicationContext(), appWidgetManager, mAppWidgetId);
+
     Intent resultValue = new Intent();
     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
     setResult(RESULT_OK, resultValue);

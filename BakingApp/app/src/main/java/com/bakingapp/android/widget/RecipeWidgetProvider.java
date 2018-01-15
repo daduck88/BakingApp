@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
@@ -25,6 +26,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
     Intent intent = new Intent(context, ListWidgetService.class);
     intent.putExtra(ListWidgetService.APP_WIDGET_ID, appWidgetId);
+//    intent.setData(Uri.fromParts("content", String.valueOf(appWidgetId), null));
     rv.setRemoteAdapter(R.id.lVWidget, intent);
     // Set the PlantDetailActivity intent to launch when clicked
     Intent appIntent = new Intent(context, DetailActivity.class);

@@ -2,9 +2,9 @@
   "documentation": "Step of the Recipe",
   "fields": [
     {
-      "name": "id_step",
+      "name": "position",
       "type": "Integer",
-      "index": true
+      "nullable": false
     },
     {
       "documentation": "short description",
@@ -37,7 +37,7 @@
   "constraints": [
     {
       "name": "unique_recipe",
-      "definition": "UNIQUE (id_recipe, id_step) ON CONFLICT REPLACE"
+      "definition": "UNIQUE (id_recipe, position) ON CONFLICT REPLACE"
     }
   ]
 }

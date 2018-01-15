@@ -38,6 +38,7 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.StepCli
 
     private void initData() {
         mRecipe = getIntent().getExtras().getParcelable(RECIPE);
+        mCurrentStepPosition = getIntent().getExtras().getInt(CURRENT_STEP, 0);
     }
 
     private void initRecipeDetail() {
