@@ -2,6 +2,8 @@ package com.bakingapp.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -13,6 +15,7 @@ import com.bakingapp.android.recipes.RecipesFragment;
 
 public class MainActivity extends BaseActivity implements RecipesAdapter.RecipeClickListener {
 
+  RecipesFragment mRecipesFragment;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -23,7 +26,8 @@ public class MainActivity extends BaseActivity implements RecipesAdapter.RecipeC
 
   private void initRecipesList() {
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    ft.replace(R.id.main_container, RecipesFragment.newInstance(getResources().getInteger(R.integer.recipes_columns)));
+    mRecipesFragment = RecipesFragment.newInstance(getResources().getInteger(R.integer.recipes_columns));
+    ft.replace(R.id.main_container, mRecipesFragment);
     ft.commitAllowingStateLoss();
   }
 
@@ -33,5 +37,10 @@ public class MainActivity extends BaseActivity implements RecipesAdapter.RecipeC
     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
     intent.putExtra(DetailActivity.RECIPE, recipe);
     startActivity(intent);
+  }
+
+  @VisibleForTesting
+  public CountingIdlingResource getEspressoIdlingResourceForMainActivity() {
+    return mRecipesFragment.getEspressoIdlingResourceForRecipesFragment();
   }
 }

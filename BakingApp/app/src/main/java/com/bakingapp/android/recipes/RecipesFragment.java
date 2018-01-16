@@ -2,6 +2,8 @@ package com.bakingapp.android.recipes;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +35,9 @@ public class RecipesFragment extends Fragment {
   // TODO: Customize parameters
   private int mColumnCount = 2;
   private RecipesAdapter.RecipeClickListener mListener;
+
+  @VisibleForTesting
+  CountingIdlingResource espressoTestIdlingResource = new CountingIdlingResource("Network_Call");
 
   @Inject
   RecipesDataRepository recipesDataRepository;
@@ -87,6 +92,7 @@ public class RecipesFragment extends Fragment {
   }
 
   private void initData() {
+    espressoTestIdlingResource.increment();
     recipesDataRepository.getRecipes().subscribe(this::displayStockResults, this::displayErrors);
   }
 
@@ -103,6 +109,9 @@ public class RecipesFragment extends Fragment {
 
   private void displayStockResults(List<Recipe> recipes) {
     adapter.updateData(recipes);
+    if(!recipes.isEmpty()) {
+      espressoTestIdlingResource.decrement();
+    }
   }
 
   @Override
@@ -120,5 +129,10 @@ public class RecipesFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
     mListener = null;
+  }
+
+  @VisibleForTesting
+  public CountingIdlingResource getEspressoIdlingResourceForRecipesFragment() {
+    return espressoTestIdlingResource;
   }
 }
