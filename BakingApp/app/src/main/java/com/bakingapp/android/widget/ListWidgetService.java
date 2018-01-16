@@ -25,6 +25,7 @@ import android.widget.RemoteViewsService;
 
 import com.bakingapp.android.App;
 import com.bakingapp.android.R;
+import com.bakingapp.android.data.Ingredient;
 import com.bakingapp.android.data.Recipe;
 import com.bakingapp.android.data.Step;
 import com.bakingapp.android.detailrecipe.DetailActivity;
@@ -54,7 +55,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
   private int mAppWidgetId;
   private Context mContext;
   private Recipe mWidgetRecipe;
-  private List<Step> mStepList;
+  private List<Ingredient> mIngredientList;
 
   public ListRemoteViewsFactory(Context applicationContext, int appWidgetId) {
     mContext = applicationContext;
@@ -78,7 +79,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
       RecipeCursor recipeCursor = recipeSelection.query(App.getContext());
       if((recipeCursor != null && recipeCursor.moveToNext())) {
         mWidgetRecipe = RecipesDataRepository.getRecipe(recipeCursor);
-        mStepList = mWidgetRecipe.getSteps();
+        mIngredientList = mWidgetRecipe.getIngredients();
       }
     }
   }
@@ -89,10 +90,10 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
   @Override
   public int getCount() {
-    if(mStepList == null) {
+    if(mIngredientList == null) {
       return 0;
     }
-    return mStepList.size();
+    return mIngredientList.size();
   }
 
   /**
@@ -103,16 +104,15 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
    */
   @Override
   public RemoteViews getViewAt(int position) {
-    Step step = mStepList.get(position);
+    Ingredient step = mIngredientList.get(position);
 
     RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.item_widget_step);
 
-    views.setTextViewText(R.id.content, step.getShortDescription());
+    views.setTextViewText(R.id.content, step.getIngredient());
 
     // Fill in the onClick PendingIntent Template using the specific step position
     Bundle extras = new Bundle();
     extras.putParcelable(DetailActivity.RECIPE, mWidgetRecipe);
-    extras.putLong(DetailActivity.CURRENT_STEP, position);
     Intent fillInIntent = new Intent();
     fillInIntent.putExtras(extras);
     views.setOnClickFillInIntent(R.id.layoutListener, fillInIntent);
