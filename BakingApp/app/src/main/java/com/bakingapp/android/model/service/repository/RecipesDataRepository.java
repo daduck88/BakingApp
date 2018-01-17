@@ -46,7 +46,7 @@ public class RecipesDataRepository {
 
     public Observable<List<Recipe>> getRecipesAPI() {
         Observable<List<Recipe>> observableAPI = service
-            .getRecipes().delay(3, TimeUnit.SECONDS)
+            .getRecipes().delay(1, TimeUnit.SECONDS)
             .flatMap(recipes -> {
                 saveRecipesDB(recipes);
                 Log.e("TEMP ", "save API to DB");

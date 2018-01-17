@@ -109,7 +109,7 @@ public class RecipesFragment extends Fragment {
 
   private void displayStockResults(List<Recipe> recipes) {
     adapter.updateData(recipes);
-    if(!recipes.isEmpty()) {
+    if(!recipes.isEmpty() && !espressoTestIdlingResource.isIdleNow()) {
       espressoTestIdlingResource.decrement();
     }
   }
