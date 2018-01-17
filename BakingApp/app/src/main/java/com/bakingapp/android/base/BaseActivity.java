@@ -2,8 +2,10 @@ package com.bakingapp.android.base;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.bakingapp.android.App;
 import com.bakingapp.android.R;
@@ -13,15 +15,14 @@ public class BaseActivity extends AppCompatActivity {
   protected boolean overrideOrientation = true;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    if(overrideOrientation) {
-      if(App.isTablet()) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-      } else {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-      }
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      // Respond to the action bar's Up/Home button
+      case android.R.id.home:
+        onBackPressed();
+        return true;
     }
-    super.onCreate(savedInstanceState);
+    return super.onOptionsItemSelected(item);
   }
 
   protected void initToolbar() {

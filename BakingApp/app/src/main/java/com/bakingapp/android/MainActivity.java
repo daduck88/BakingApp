@@ -16,6 +16,7 @@ import com.bakingapp.android.recipes.RecipesFragment;
 public class MainActivity extends BaseActivity implements RecipesAdapter.RecipeClickListener {
 
   RecipesFragment mRecipesFragment;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -30,7 +31,6 @@ public class MainActivity extends BaseActivity implements RecipesAdapter.RecipeC
     ft.replace(R.id.main_container, mRecipesFragment);
     ft.commitAllowingStateLoss();
   }
-
 
   @Override
   public void onRecipeClick(Recipe recipe, View view) {

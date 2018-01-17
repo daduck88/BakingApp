@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.bakingapp.android.R;
 import com.bakingapp.android.data.Step;
 import com.bakingapp.android.databinding.FragmentStepBinding;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -37,6 +38,7 @@ public class StepFragment extends Fragment {
   // TODO: Rename parameter arguments, choose names that match
   // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
   private static final String STEP = "STEP";
+  private static final String SELECTED_POSITION = "SELECTED_POSITION";
 
   // TODO: Rename and change types of parameters
   private Step mStep;
@@ -45,6 +47,7 @@ public class StepFragment extends Fragment {
 
   private SimpleExoPlayer mExoPlayer;
   private SimpleExoPlayerView mPlayerView;
+  private long position;
 
   /**
    * Use this factory method to create a new instance of
@@ -56,6 +59,7 @@ public class StepFragment extends Fragment {
   // TODO: Rename and change types and number of parameters
   public static StepFragment newInstance(Step step, boolean isFirstStep,boolean isLastStep) {
     StepFragment fragment = new StepFragment();
+    fragment.setRetainInstance(true);
     Bundle args = new Bundle();
     step.setNotFirst(!isFirstStep);
     step.setNotLast(!isLastStep);
@@ -75,6 +79,11 @@ public class StepFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+    position = C.TIME_UNSET;
+    if (savedInstanceState != null) {
+      //...your code...
+      position = savedInstanceState.getLong(SELECTED_POSITION, C.TIME_UNSET);
+    }
     FragmentStepBinding binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_step, container, false);
     View view = binding.getRoot();
@@ -98,6 +107,7 @@ public class StepFragment extends Fragment {
         String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
         MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(mStep.getVideoURL()), new DefaultDataSourceFactory(
             getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+        if (position != C.TIME_UNSET) mExoPlayer.seekTo(position);
         mExoPlayer.prepare(mediaSource);
         mExoPlayer.setPlayWhenReady(true);
       }
@@ -113,9 +123,24 @@ public class StepFragment extends Fragment {
   }
 
   @Override
-  public void onDestroy() {
-    super.onDestroy();
-    releasePlayer();
+  public void onResume() {
+    super.onResume();
+    initPlayer();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (mExoPlayer != null) {
+      position = mExoPlayer.getCurrentPosition();
+      releasePlayer();
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    outState.putLong(SELECTED_POSITION, position);
+    super.onSaveInstanceState(outState);
   }
 
   public void setListener(OnPreviousNextStepListener mListener) {

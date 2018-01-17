@@ -21,7 +21,6 @@
 
     <activity
       android:name=".MainActivity"
-      android:screenOrientation="behind"
       android:theme="@style/NotToolbarTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -31,7 +30,6 @@
     </activity>
     <activity
       android:name=".detailrecipe.DetailActivity"
-      android:screenOrientation="behind"
       android:theme="@style/NotToolbarTheme"/>
     <activity
       android:name=".detailrecipe.step.StepActivity"
