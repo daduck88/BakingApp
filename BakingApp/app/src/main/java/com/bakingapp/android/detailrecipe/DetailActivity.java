@@ -9,8 +9,11 @@ import android.view.View;
 import com.bakingapp.android.App;
 import com.bakingapp.android.R;
 import com.bakingapp.android.base.BaseActivity;
+import com.bakingapp.android.data.Ingredient;
 import com.bakingapp.android.data.Recipe;
 import com.bakingapp.android.data.Step;
+import com.bakingapp.android.detailrecipe.ingredients.IngredientsActivity;
+import com.bakingapp.android.detailrecipe.ingredients.IngredientsFragment;
 import com.bakingapp.android.detailrecipe.step.StepActivity;
 import com.bakingapp.android.detailrecipe.step.StepFragment;
 import com.bakingapp.android.detailrecipe.steps.StepsAdapter;
@@ -55,7 +58,11 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.StepCli
     mStepsFragment = StepsFragment.newInstance((ArrayList<Step>) mRecipe.getSteps());
     ft.replace(R.id.main_container, mStepsFragment);
     if(App.isTablet() && mRecipe.getSteps() != null && !mRecipe.getSteps().isEmpty()) {
-      navigateToStep(mCurrentStepPosition);
+      if(mCurrentStepPosition == -1){
+        onIngredientsClick();
+      } else {
+        navigateToStep(mCurrentStepPosition);
+      }
       mStepsFragment.setSelectedStep(mCurrentStepPosition);
     }
     ft.commitAllowingStateLoss();
@@ -74,6 +81,30 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.StepCli
       mStepsFragment.setSelectedStep(position);
     }
     navigateToStep(position);
+  }
+
+  @Override
+  public void onIngredientsClick() {
+    if(App.isTablet()) {
+      mCurrentStepPosition = -1;
+      FragmentManager fm = getSupportFragmentManager();
+      IngredientsFragment ingredientsFragment = null;
+      if(restore) {
+        ingredientsFragment = (IngredientsFragment) fm.findFragmentByTag("ingredients");
+        restore = false;
+      }
+      if(ingredientsFragment == null) {
+        FragmentTransaction ft = fm.beginTransaction();
+        ingredientsFragment = IngredientsFragment.newInstance((ArrayList<Ingredient>) mRecipe.getIngredients());
+        ft.replace(R.id.main_container_detail, ingredientsFragment, "ingredients");
+        ft.commitAllowingStateLoss();
+      }
+      mStepsFragment.setSelectedStep(mCurrentStepPosition);
+    } else {
+      Intent intent = new Intent(DetailActivity.this, IngredientsActivity.class);
+      intent.putExtra(IngredientsActivity.RECIPE, mRecipe);
+      startActivity(intent);
+    }
   }
 
   private void navigateToStep(int selectedStepPosition) {

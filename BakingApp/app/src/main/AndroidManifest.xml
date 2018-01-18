@@ -34,6 +34,9 @@
     <activity
       android:name=".detailrecipe.step.StepActivity"
       android:theme="@style/NotToolbarTheme"/>
+    <activity
+      android:name=".detailrecipe.ingredients.IngredientsActivity"
+      android:theme="@style/NotToolbarTheme"/>
 
     <receiver android:name=".widget.RecipeWidgetProvider">
       <intent-filter>

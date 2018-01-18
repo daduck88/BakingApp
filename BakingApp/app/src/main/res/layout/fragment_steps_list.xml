@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/list"
-  android:name="com.bakingapp.android.detailrecipe.steps.StepsFragment"
+  android:id="@+id/myScrollView"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-    android:background="@android:color/white"
-  app:layoutManager="LinearLayoutManager"
-  tools:context="com.bakingapp.android.detailrecipe.steps.StepsFragment"
-  tools:listitem="@layout/item_step" />
+  android:background="@android:color/white">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+      android:id="@+id/ingredients"
+      layout="@layout/item_ingredient"/>
+
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/list"
+      android:name="com.bakingapp.android.detailrecipe.steps.StepsFragment"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:nestedScrollingEnabled="false"
+      app:layoutManager="LinearLayoutManager"
+      tools:context="com.bakingapp.android.detailrecipe.steps.StepsFragment"
+      tools:listitem="@layout/item_step"/>
+  </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

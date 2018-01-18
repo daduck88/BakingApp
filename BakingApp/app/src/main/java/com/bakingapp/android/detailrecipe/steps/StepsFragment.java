@@ -29,6 +29,7 @@ public class StepsFragment extends Fragment {
   private StepsAdapter.StepClickListener mListener;
   private StepsAdapter mAdapter;
   private int mSelectedStep;
+  private View mIngredientsView;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,17 +63,20 @@ public class StepsFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
     // Set the adapter
-    if(view instanceof RecyclerView) {
-      Context context = view.getContext();
-      RecyclerView recyclerView = (RecyclerView) view;
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-      mAdapter = new StepsAdapter(mSteps, mListener);
-      recyclerView.setAdapter(mAdapter);
-      setSelectedStep(mSelectedStep);
-    }
+    Context context = view.getContext();
+    initIngredients(view.findViewById(R.id.ingredients));
+    RecyclerView recyclerView = view.findViewById(R.id.list);
+    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    mAdapter = new StepsAdapter(mSteps, mListener);
+    recyclerView.setAdapter(mAdapter);
+    setSelectedStep(mSelectedStep);
     return view;
   }
 
+  private void initIngredients(View view) {
+    mIngredientsView = view;
+    view.setOnClickListener((viewClicked)-> mListener.onIngredientsClick());
+  }
 
   @Override
   public void onAttach(Context context) {
@@ -94,8 +98,14 @@ public class StepsFragment extends Fragment {
   public void setSelectedStep(int selectedPosition) {
     if(App.isTablet()) {
       mSelectedStep = selectedPosition;
-      if (!mSteps.isEmpty()) {
-        mAdapter.setSelectedStep(mSteps.get(mSelectedStep));
+      if(!mSteps.isEmpty()) {
+        if(mSelectedStep == -1){
+          mIngredientsView.setSelected(true);
+          mAdapter.setSelectedStep(null);
+        } else {
+          mIngredientsView.setSelected(false);
+          mAdapter.setSelectedStep(mSteps.get(mSelectedStep));
+        }
       }
     }
   }

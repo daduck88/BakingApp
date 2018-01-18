@@ -71,5 +71,6 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
 
   public interface StepClickListener {
     void onStepClick(int position, View view);
+    void onIngredientsClick();
   }
 }

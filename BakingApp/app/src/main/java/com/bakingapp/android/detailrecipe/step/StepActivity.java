@@ -57,6 +57,11 @@ public class StepActivity extends BaseActivity implements StepsAdapter.StepClick
     navigateToStep(position);
   }
 
+  @Override
+  public void onIngredientsClick() {
+    //do nothing
+  }
+
   private void navigateToStep(int selectedStepPosition) {
     Step currentStep = mRecipe.getSteps().get(selectedStepPosition);
     mCurrentStepPosition = selectedStepPosition;
