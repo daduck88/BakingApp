@@ -39,6 +39,7 @@ public class StepFragment extends Fragment {
   // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
   private static final String STEP = "STEP";
   private static final String SELECTED_POSITION = "SELECTED_POSITION";
+  private static final String PLAYED_STATE = "PLAYED_STATE";
 
   // TODO: Rename and change types of parameters
   private Step mStep;
@@ -48,6 +49,7 @@ public class StepFragment extends Fragment {
   private SimpleExoPlayer mExoPlayer;
   private SimpleExoPlayerView mPlayerView;
   private long position;
+  private boolean playedState = true;
 
   /**
    * Use this factory method to create a new instance of
@@ -83,6 +85,7 @@ public class StepFragment extends Fragment {
     if (savedInstanceState != null) {
       //...your code...
       position = savedInstanceState.getLong(SELECTED_POSITION, C.TIME_UNSET);
+      playedState = savedInstanceState.getBoolean(PLAYED_STATE, true);
     }
     FragmentStepBinding binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_step, container, false);
@@ -91,7 +94,6 @@ public class StepFragment extends Fragment {
     binding.setStep(mStep);
     binding.setListener(mListener);
     mPlayerView = binding.playerView;
-    initPlayer();
     return view;
   }
 
@@ -109,7 +111,7 @@ public class StepFragment extends Fragment {
             getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
         if (position != C.TIME_UNSET) mExoPlayer.seekTo(position);
         mExoPlayer.prepare(mediaSource);
-        mExoPlayer.setPlayWhenReady(true);
+        mExoPlayer.setPlayWhenReady(playedState);
       }
     }
   }
@@ -133,6 +135,7 @@ public class StepFragment extends Fragment {
     super.onPause();
     if (mExoPlayer != null) {
       position = mExoPlayer.getCurrentPosition();
+      playedState = mExoPlayer.getPlayWhenReady();
       releasePlayer();
     }
   }
@@ -140,6 +143,7 @@ public class StepFragment extends Fragment {
   @Override
   public void onSaveInstanceState(Bundle outState) {
     outState.putLong(SELECTED_POSITION, position);
+    outState.putBoolean(PLAYED_STATE, playedState);
     super.onSaveInstanceState(outState);
   }
 
