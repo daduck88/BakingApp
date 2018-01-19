@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.idling.CountingIdlingResource;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -26,10 +27,14 @@ public class MainActivity extends BaseActivity implements RecipesAdapter.RecipeC
   }
 
   private void initRecipesList() {
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    mRecipesFragment = RecipesFragment.newInstance(getResources().getInteger(R.integer.recipes_columns));
-    ft.replace(R.id.main_container, mRecipesFragment);
-    ft.commitAllowingStateLoss();
+    FragmentManager fm = getSupportFragmentManager();
+    mRecipesFragment = (RecipesFragment) fm.findFragmentByTag("recipes");
+    if(mRecipesFragment == null) {
+      FragmentTransaction ft = fm.beginTransaction();
+      mRecipesFragment = RecipesFragment.newInstance(getResources().getInteger(R.integer.recipes_columns));
+      ft.replace(R.id.main_container, mRecipesFragment, "recipes");
+      ft.commitAllowingStateLoss();
+    }
   }
 
   @Override

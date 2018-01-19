@@ -42,6 +42,8 @@ public class RecipesFragment extends Fragment {
   @Inject
   RecipesDataRepository recipesDataRepository;
   private RecipesAdapter adapter;
+  private LinearLayoutManager lManager;
+  private int positionIndex;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,7 +66,7 @@ public class RecipesFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     App.getAppComponent(getActivity()).inject(this);
     super.onCreate(savedInstanceState);
-
+    setRetainInstance(true);
     if(getArguments() != null) {
       mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
     }
@@ -78,14 +80,16 @@ public class RecipesFragment extends Fragment {
     // Set the adapter
     if(view instanceof RecyclerView) {
       Context context = view.getContext();
-      RecyclerView recyclerView = (RecyclerView) view;
+      RecyclerView rvList = (RecyclerView) view;
+      lManager = null;
       if(mColumnCount <= 1) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        lManager = new LinearLayoutManager(context);
       } else {
-        recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        lManager = new GridLayoutManager(context, mColumnCount);
       }
+      rvList.setLayoutManager(lManager);
       adapter = new RecipesAdapter(new ArrayList<Recipe>(), mListener);
-      recyclerView.setAdapter(adapter);
+      rvList.setAdapter(adapter);
     }
     initData();
     return view;
@@ -123,6 +127,19 @@ public class RecipesFragment extends Fragment {
       throw new RuntimeException(context.toString()
           + " must implement OnListStepClickListener");
     }
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    positionIndex = lManager.findFirstCompletelyVisibleItemPosition();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    lManager.scrollToPosition(positionIndex);
+    positionIndex = 0;
   }
 
   @Override

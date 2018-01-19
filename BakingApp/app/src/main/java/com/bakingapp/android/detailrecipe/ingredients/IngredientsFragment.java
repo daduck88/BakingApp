@@ -9,10 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bakingapp.android.App;
 import com.bakingapp.android.R;
 import com.bakingapp.android.data.Ingredient;
-import com.bakingapp.android.data.Step;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +23,8 @@ public class IngredientsFragment extends Fragment {
   private static final String INGREDIENTS = "INGREDIENTS";
   private List<Ingredient> mIngredients = new ArrayList<>();
   private IngredientsAdapter mAdapter;
+  private LinearLayoutManager lManager;
+  private int positionIndex;
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,7 +46,7 @@ public class IngredientsFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    setRetainInstance(true);
     if(getArguments() != null) {
       mIngredients = getArguments().getParcelableArrayList(INGREDIENTS);
     }
@@ -59,9 +59,23 @@ public class IngredientsFragment extends Fragment {
     // Set the adapter
     Context context = view.getContext();
     RecyclerView recyclerView = (RecyclerView) view;
-    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    lManager = new LinearLayoutManager(context);
+    recyclerView.setLayoutManager(lManager);
     mAdapter = new IngredientsAdapter(mIngredients);
     recyclerView.setAdapter(mAdapter);
     return view;
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    positionIndex = lManager.findFirstCompletelyVisibleItemPosition();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    lManager.scrollToPosition(positionIndex);
+    positionIndex = 0;
   }
 }

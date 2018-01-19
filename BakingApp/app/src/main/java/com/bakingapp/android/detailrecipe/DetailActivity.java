@@ -18,6 +18,7 @@ import com.bakingapp.android.detailrecipe.step.StepActivity;
 import com.bakingapp.android.detailrecipe.step.StepFragment;
 import com.bakingapp.android.detailrecipe.steps.StepsAdapter;
 import com.bakingapp.android.detailrecipe.steps.StepsFragment;
+import com.bakingapp.android.recipes.RecipesFragment;
 
 import java.util.ArrayList;
 
@@ -54,9 +55,14 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.StepCli
   }
 
   private void initRecipeDetail() {
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    mStepsFragment = StepsFragment.newInstance((ArrayList<Step>) mRecipe.getSteps());
-    ft.replace(R.id.main_container, mStepsFragment);
+    FragmentManager fm = getSupportFragmentManager();
+    mStepsFragment = (StepsFragment) fm.findFragmentByTag("steps");
+    if(mStepsFragment == null) {
+      mStepsFragment = StepsFragment.newInstance((ArrayList<Step>) mRecipe.getSteps());
+      FragmentTransaction ft = fm.beginTransaction();
+      ft.replace(R.id.main_container, mStepsFragment, "steps");
+      ft.commitAllowingStateLoss();
+    }
     if(App.isTablet() && mRecipe.getSteps() != null && !mRecipe.getSteps().isEmpty()) {
       if(mCurrentStepPosition == -1){
         onIngredientsClick();
@@ -65,7 +71,6 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.StepCli
       }
       mStepsFragment.setSelectedStep(mCurrentStepPosition);
     }
-    ft.commitAllowingStateLoss();
   }
 
   @Override

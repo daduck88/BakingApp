@@ -4,6 +4,7 @@ package com.bakingapp.android.data;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.bakingapp.android.App;
@@ -111,14 +112,14 @@ public class Step implements Parcelable{
     }
 
     public int videoVisibility(){
-        if(videoURL == null || videoURL.isEmpty()){
+        if(TextUtils.isEmpty(videoURL)){
             return View.GONE;
         }
         return View.VISIBLE;
     }
 
     public int imageVisibility(){
-        if(thumbnailURL == null || thumbnailURL.isEmpty() || thumbnailURL.endsWith(".mp4")){
+        if(TextUtils.isEmpty(thumbnailURL) || thumbnailURL.endsWith(".mp4")){
             return View.GONE;
         }
         return View.VISIBLE;

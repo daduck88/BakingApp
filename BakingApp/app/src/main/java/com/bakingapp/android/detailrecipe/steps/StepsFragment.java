@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link StepClickListener}
+ * Activities containing this fragment MUST implement the {@link StepsAdapter.StepClickListener}
  * interface.
  */
 public class StepsFragment extends Fragment {
@@ -27,6 +27,8 @@ public class StepsFragment extends Fragment {
   private static final String STEPS = "STEPS";
   private List<Step> mSteps = new ArrayList<>();
   private StepsAdapter.StepClickListener mListener;
+  private LinearLayoutManager lManager;
+  private int positionIndex;
   private StepsAdapter mAdapter;
   private int mSelectedStep;
   private View mIngredientsView;
@@ -51,7 +53,7 @@ public class StepsFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    setRetainInstance(true);
     if(getArguments() != null) {
       mSteps = getArguments().getParcelableArrayList(STEPS);
     }
@@ -66,7 +68,8 @@ public class StepsFragment extends Fragment {
     Context context = view.getContext();
     initIngredients(view.findViewById(R.id.ingredients));
     RecyclerView recyclerView = view.findViewById(R.id.list);
-    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    lManager = new LinearLayoutManager(context);
+    recyclerView.setLayoutManager(lManager);
     mAdapter = new StepsAdapter(mSteps, mListener);
     recyclerView.setAdapter(mAdapter);
     setSelectedStep(mSelectedStep);
@@ -75,7 +78,7 @@ public class StepsFragment extends Fragment {
 
   private void initIngredients(View view) {
     mIngredientsView = view;
-    view.setOnClickListener((viewClicked)-> mListener.onIngredientsClick());
+    view.setOnClickListener((viewClicked) -> mListener.onIngredientsClick());
   }
 
   @Override
@@ -90,6 +93,19 @@ public class StepsFragment extends Fragment {
   }
 
   @Override
+  public void onPause() {
+    super.onPause();
+    positionIndex = lManager.findFirstCompletelyVisibleItemPosition();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    lManager.scrollToPosition(positionIndex);
+    positionIndex = 0;
+  }
+
+  @Override
   public void onDetach() {
     super.onDetach();
     mListener = null;
@@ -99,7 +115,7 @@ public class StepsFragment extends Fragment {
     if(App.isTablet()) {
       mSelectedStep = selectedPosition;
       if(!mSteps.isEmpty()) {
-        if(mSelectedStep == -1){
+        if(mSelectedStep == -1) {
           mIngredientsView.setSelected(true);
           mAdapter.setSelectedStep(null);
         } else {
